@@ -1,0 +1,46 @@
+/*
+* Author : Fabio Fiorella.
+*/
+
+ASSUMPTIONS
+
+With the informations available to me, I assumed:
+   - a transaction can have at most one son. 
+   - the transaction id is automatically generated and the client send it to the RESTful 
+     webservice. For this reason the webservice don't check if a transaction id already exists.
+   - when a new transaction have the field "parent_id" null, this will be set to 0 in the
+   	 new transaction object.
+   	 
+ASYMPTOTIC BEHAVIOUR
+
+The requested operations for this test are four, 3 of these for getting informations, 
+the other one to put a new transaction. 
+
+The first operation is "get transaction" starting from the transaction id. It's clear
+that the id can be used like a key to access to the transaction information.  
+So I choose to use an HashMap to store all the transaction objects. 
+In this case an HashMap allow us to find the requested transaction with time O(1) , better
+than any other data structure (with a list for example we would have an time O(n)  ). 
+
+The second operation is "get type", i.e. get all the transaction of a specified type. 
+Because I choose an HashMap to store the transactions, a first solution to get all the 
+transaction of the some type is check all items of the HashMap. This operation will 
+require time O(n) . 
+Another solution could be using another HashMap where the key is the type and the coupled 
+value is a list of all the transaction ids belonging to that type. With this solution 
+find the list of transaction of the requested type require time O(1) . However this 
+solution involve a waste of memory, due to the redundancy of the informations. Having no 
+informations about the amount of transactions that the web service could store I choose to use
+an HashMap also in this case, assuming that the memory leak is something that we can afford. 
+
+The third operation is "get sum". 
+For this operation are valid the considerations made for the second one. Also in this case I 
+choose to use an HashMap where the key is the  parent of the transaction and the coupled value is 
+a transaction son. With this choice we have a time O(1) , exploring the transaction hierarchy.
+We still have a memory waste, but compared to the previous case this waste is less, because 
+not all the transactions have sons. 
+
+Finally the operation "put transaction". Using an HashMap the insertion operations have O(1)
+time. Because I choose to use three HashMap when a new transaction is inserted I need to update
+the other two HashMap. These updates both have O(1) time, so when a new transaction is inserted
+we have time O(1) + O(1) + O(1) , that is still comparable to O(1).   
