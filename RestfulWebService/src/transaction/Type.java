@@ -30,9 +30,9 @@ public class Type {
 	public Response getType(@PathParam("type") String type){
 		
 		//a new json array is created with the returned list
-		JSONArray json_transactions = new JSONArray(TransactionStored.getTypes(type));
+		JSONArray jsonTransactions = new JSONArray(TransactionStored.getTypes(type));
 			
-		return Response.status(200).entity(json_transactions.toString()).build();		
+		return Response.status(200).entity(jsonTransactions.toString()).build();		
 				
 	}
 

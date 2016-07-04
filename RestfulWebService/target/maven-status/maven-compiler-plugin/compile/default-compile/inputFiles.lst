@@ -1,6 +1,9 @@
-C:\Users\Simona\workspace\RestfulWebService\src\transaction\Transaction.java
-C:\Users\Simona\workspace\RestfulWebService\src\transaction\TransactionObj.java
-C:\Users\Simona\workspace\RestfulWebService\src\transaction\client.java
-C:\Users\Simona\workspace\RestfulWebService\src\transaction\TransactionStored.java
-C:\Users\Simona\workspace\RestfulWebService\src\transaction\Sum.java
-C:\Users\Simona\workspace\RestfulWebService\src\transaction\Type.java
+C:\Users\Utente\git\Number26-Test\RestfulWebService\src\transactionTestSuite\GetWithNoTransactionsTest.java
+C:\Users\Utente\git\Number26-Test\RestfulWebService\src\transaction\Type.java
+C:\Users\Utente\git\Number26-Test\RestfulWebService\src\transaction\Transaction.java
+C:\Users\Utente\git\Number26-Test\RestfulWebService\src\transactionTestSuite\InsertTransactionsTest.java
+C:\Users\Utente\git\Number26-Test\RestfulWebService\src\transaction\TransactionStored.java
+C:\Users\Utente\git\Number26-Test\RestfulWebService\src\transactionTestSuite\AllTests.java
+C:\Users\Utente\git\Number26-Test\RestfulWebService\src\transaction\Sum.java
+C:\Users\Utente\git\Number26-Test\RestfulWebService\src\transaction\TransactionObj.java
+C:\Users\Utente\git\Number26-Test\RestfulWebService\src\transactionTestSuite\GetWithTransactionStoredTest.java

@@ -1,4 +1,4 @@
-package transaction_test_suite;
+package transactionTestSuite;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
@@ -35,9 +35,9 @@ public class GetWithNoTransactionsTest {
 		
 		ClientResponse response = null;
 		
-		long transaction_id = 1;
+		long transactionId = 1;
 				
-		webResource = client.resource("http://localhost:8080/RestfulWebService/transactionservice/transaction/" + transaction_id );
+		webResource = client.resource("http://localhost:8080/RestfulWebService/transactionservice/transaction/" + transactionId );
 		
 		response = webResource.accept(MediaType.APPLICATION_JSON)
 								.type(MediaType.APPLICATION_JSON)
@@ -64,9 +64,9 @@ public class GetWithNoTransactionsTest {
 		
 		ClientResponse response = null;
 		
-		long transaction_id = 1;
+		long transactionId = 1;
 				
-		webResource = client.resource("http://localhost:8080/RestfulWebService/transactionservice/sum/" + transaction_id );
+		webResource = client.resource("http://localhost:8080/RestfulWebService/transactionservice/sum/" + transactionId );
 		
 		response = webResource.accept(MediaType.APPLICATION_JSON)
 								.type(MediaType.APPLICATION_JSON)
@@ -92,9 +92,9 @@ public class GetWithNoTransactionsTest {
 		
 		ClientResponse response = null;
 		
-		String transaction_id = "car";
+		String transactionId = "car";
 				
-		webResource = client.resource("http://localhost:8080/RestfulWebService/transactionservice/type/" + transaction_id );
+		webResource = client.resource("http://localhost:8080/RestfulWebService/transactionservice/type/" + transactionId );
 		
 		response = webResource.accept(MediaType.APPLICATION_JSON)
 								.type(MediaType.APPLICATION_JSON)

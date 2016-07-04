@@ -1,4 +1,4 @@
-package transaction_test_suite;
+package transactionTestSuite;
 
 import static org.junit.Assert.*;
 
@@ -26,7 +26,7 @@ public class InsertTransactionsTest {
 	@Test
 	public void testPutNewTransactions(){
 		
-		LinkedList<String> new_transactions = new LinkedList<String>();
+		LinkedList<String> newTransactions = new LinkedList<String>();
 		
 		Iterator<String> it = null;
 		
@@ -39,19 +39,19 @@ public class InsertTransactionsTest {
 		int i = 1;
 		
 		//create a list of new transactions
-		new_transactions.add("{\"id\": \"1\",\"amount\": \"10000\",\"type\": \"car\" }");
-		new_transactions.add("{\"id\": \"2\",\"amount\": \"5000\",\"type\": \"car\", \"parent_id\": \"1\" }");
-		new_transactions.add("{\"id\": \"3\",\"amount\": \"100\",\"type\": \"food\", \"parent_id\": \"0\" }");
-		new_transactions.add("{\"id\": \"4\",\"amount\": \"50\",\"type\": \"food\", \"parent_id\": \"0\" }");
-		new_transactions.add("{\"id\": \"5\",\"amount\": \"30000\",\"type\": \"house\", \"parent_id\": \"0\" }");
-		new_transactions.add("{\"id\": \"6\",\"amount\": \"50000\",\"type\": \"house\", \"parent_id\": \"5\" }");
-		new_transactions.add("{\"id\": \"7\",\"amount\": \"70000\",\"type\": \"house\", \"parent_id\": \"6\" }");
-		new_transactions.add("{\"id\": \"8\",\"amount\": \"40000\",\"type\": \"house\", \"parent_id\": \"7\" }");
-		new_transactions.add("{\"id\": \"9\",\"amount\": \"30\",\"type\": \"clothes\", \"parent_id\": \"0\" }");
-		new_transactions.add("{\"id\": \"10\",\"amount\": \"50\",\"type\": \"clothes\", \"parent_id\": \"0\" }");
-		new_transactions.add("{\"id\": \"11\",\"amount\": \"20\",\"type\": \"doctor\", \"parent_id\": \"0\" }");
+		newTransactions.add("{\"id\": \"1\",\"amount\": \"10000\",\"type\": \"car\" }");
+		newTransactions.add("{\"id\": \"2\",\"amount\": \"5000\",\"type\": \"car\", \"parentId\": \"1\" }");
+		newTransactions.add("{\"id\": \"3\",\"amount\": \"100\",\"type\": \"food\", \"parentId\": \"0\" }");
+		newTransactions.add("{\"id\": \"4\",\"amount\": \"50\",\"type\": \"food\", \"parentId\": \"0\" }");
+		newTransactions.add("{\"id\": \"5\",\"amount\": \"30000\",\"type\": \"house\", \"parentId\": \"0\" }");
+		newTransactions.add("{\"id\": \"6\",\"amount\": \"50000\",\"type\": \"house\", \"parentId\": \"5\" }");
+		newTransactions.add("{\"id\": \"7\",\"amount\": \"70000\",\"type\": \"house\", \"parentId\": \"6\" }");
+		newTransactions.add("{\"id\": \"8\",\"amount\": \"40000\",\"type\": \"house\", \"parentId\": \"7\" }");
+		newTransactions.add("{\"id\": \"9\",\"amount\": \"30\",\"type\": \"clothes\", \"parentId\": \"0\" }");
+		newTransactions.add("{\"id\": \"10\",\"amount\": \"50\",\"type\": \"clothes\", \"parentId\": \"0\" }");
+		newTransactions.add("{\"id\": \"11\",\"amount\": \"20\",\"type\": \"doctor\", \"parentId\": \"0\" }");
 		
-		it = new_transactions.iterator();
+		it = newTransactions.iterator();
 		
 		//cycle for each new transactions in the list
 		while(it.hasNext()){ 
@@ -81,7 +81,7 @@ public class InsertTransactionsTest {
 	@Test
 	public void testPutNewWrongTransactions(){
 		
-		LinkedList<String> new_transactions = new LinkedList<String>();
+		LinkedList<String> newTransactions = new LinkedList<String>();
 		
 		Iterator<String> it = null;
 		
@@ -94,13 +94,13 @@ public class InsertTransactionsTest {
 		int i = 12;
 		
 		//create a list of new transactions with some errors in their informations
-		new_transactions.add("{\"id\": \"12\",\"amount\": \"10000\" }");
-		new_transactions.add("{\"id\": \"13\",\"type\": \"car\", \"parent_id\": \"1\" }");
-		new_transactions.add("{\"id\": \"14\",\"amount\": \"fifty\",\"type\": \"food\", \"parent_id\": \"0\" }");
-		new_transactions.add("{\"id\": \"15\",\"amount\": \"50\",\"type\": \"food\", \"parent_id\": \"-1\" }");
+		newTransactions.add("{\"id\": \"12\",\"amount\": \"10000\" }");
+		newTransactions.add("{\"id\": \"13\",\"type\": \"car\", \"parentId\": \"1\" }");
+		newTransactions.add("{\"id\": \"14\",\"amount\": \"fifty\",\"type\": \"food\", \"parentId\": \"0\" }");
+		newTransactions.add("{\"id\": \"15\",\"amount\": \"50\",\"type\": \"food\", \"parentId\": \"-1\" }");
 		
 		
-		it = new_transactions.iterator();
+		it = newTransactions.iterator();
 						
 		while(it.hasNext()){
 			
@@ -125,7 +125,7 @@ public class InsertTransactionsTest {
 		
 		//prepare a transaction with negative id. Because the error message is different from the previous one,
 		//this case can't be in the cycle.
-		String transaction = "{\"id\": \"-15\",\"amount\": \"50\",\"type\": \"food\", \"parent_id\": \"0\" }";
+		String transaction = "{\"id\": \"-15\",\"amount\": \"50\",\"type\": \"food\", \"parentId\": \"0\" }";
 			
 		webResource = client.resource("http://localhost:8080/RestfulWebService/transactionservice/transaction/-15" );
 		

@@ -14,14 +14,14 @@ import java.util.LinkedList;
 public class TransactionStored {
 	
 	// HashMap used to store all the transactions with their informations. The key is the id of the transaction
-	private static HashMap<Long, TransactionObj> transactions_stored = new HashMap<Long, TransactionObj>();
+	private static HashMap<Long, TransactionObj> transactionsStored = new HashMap<Long, TransactionObj>();
 
 	//HashMap used to collect all the id of the transactions with the same type. The key is the type and
 	// the value is a linked list with the id of the transaction.	
-	private static HashMap<String, LinkedList<Long>> transactions_by_type = new HashMap<String, LinkedList<Long>>();
+	private static HashMap<String, LinkedList<Long>> transactionsByType = new HashMap<String, LinkedList<Long>>();
 
 	//HashMap used to keep track of the son of each transaction parent.
-	private static HashMap<Long, Long> transactions_sons = new HashMap<Long, Long>();
+	private static HashMap<Long, Long> transactionsSons = new HashMap<Long, Long>();
 	/*
 	 *  the constructor is private to make this class static.
 	 */
@@ -32,21 +32,21 @@ public class TransactionStored {
 	/*
 	 * summary : Method that insert in the HashMap of the transactions the new transactions. 
 	 * 			 It is also necessary to keep track of the type of the new transaction and consequently update the HashMap with the types.
-	 * param   : TransactionObj new_transaction - the object of the new transaction.
+	 * param   : TransactionObj newTransaction - the object of the new transaction.
 	 * return  : boolean - indicating success or fail. 
 	 */
-	public static boolean insertNewTransaction(TransactionObj new_transaction){
+	public static boolean insertNewTransaction(TransactionObj newTransaction){
 		
 		boolean result = false;
 
 		//insert the new transaction 		
-		transactions_stored.put(new_transaction.getId(), new_transaction);
+		transactionsStored.put(newTransaction.getId(), newTransaction);
 			
 		//after the insertion it keep track of the type calling trackTypes
-		result = trackTypes(new_transaction.getType(), new_transaction.getId());		
+		result = trackTypes(newTransaction.getType(), newTransaction.getId());		
 		
-		if(new_transaction.getParentId() > 0)
-			trackTransactionsSons(new_transaction.getParentId() , new_transaction.getId());
+		if(newTransaction.getParentId() > 0)
+			trackTransactionsSons(newTransaction.getParentId() , newTransaction.getId());
 						
 		return result;
 	}
@@ -58,7 +58,7 @@ public class TransactionStored {
 	 */
 	public static TransactionObj getTransaction(long id){
 		
-		return transactions_stored.get(id);
+		return transactionsStored.get(id);
 	}
 	
 	
@@ -70,14 +70,14 @@ public class TransactionStored {
 	 */
 	public static LinkedList<Long> getTypes(String type){
 		
-		return transactions_by_type.get(type);
+		return transactionsByType.get(type);
 		
 	}
 	
 	
 	/*
-	 * summary : This method return the sum of the transaction linked by parent_id. The son of the specified
-	 * 			 transactions is founded in transactions_sons.
+	 * summary : This method return the sum of the transaction linked by parentId. The son of the specified
+	 * 			 transactions is founded in transactionsSons.
 	 * param   : long id - id of the parent of the transaction. 
 	 * return  : double  - sum of the amount of the transaction linked to the specified transaction. 
 	 */	
@@ -87,20 +87,20 @@ public class TransactionStored {
 		// it was impossible to find the transaction with the specified id.
 		double sum = -1;
 		
-		TransactionObj transaction_parent = transactions_stored.get(id);
+		TransactionObj transactionParent = transactionsStored.get(id);
 		
 		//check if the request transaction really exist 
-		if(transaction_parent != null){
+		if(transactionParent != null){
 			
 			//change the value of sum with the amount of the specified transaction
-			sum = transaction_parent.getAmount();
+			sum = transactionParent.getAmount();
 			
 			//cycle until there are sons 
-			while(transactions_sons.containsKey(id)){
+			while(transactionsSons.containsKey(id)){
 								
-				id = transactions_sons.get(id);
+				id = transactionsSons.get(id);
 							
-				sum += transactions_stored.get(id).getAmount();
+				sum += transactionsStored.get(id).getAmount();
 			}			
 			
 		
@@ -122,19 +122,19 @@ public class TransactionStored {
 		boolean result = false;
 		
 		// list with the ids of all transactions of the specified type.
-		LinkedList<Long> transactions_id_by_single_type = new LinkedList<Long>();
+		LinkedList<Long> transactionsIdBySingleType = new LinkedList<Long>();
 		
 		//check if already exists the key specified in the variable type.
-		if(transactions_by_type.get(type) != null){
-			transactions_id_by_single_type = transactions_by_type.get(type);
+		if(transactionsByType.get(type) != null){
+			transactionsIdBySingleType = transactionsByType.get(type);
 		}
 		
 		//add the id of the new transaction to the list of all transactions of the specified type. 
-		result = transactions_id_by_single_type.add(id);
+		result = transactionsIdBySingleType.add(id);
 		
 		if(result)
 			//insert the couple key-value in the HashMap. If the key already exist, it will be update. 
-			transactions_by_type.put(type, transactions_id_by_single_type);
+			transactionsByType.put(type, transactionsIdBySingleType);
 				 
 		return result;
 					
@@ -142,7 +142,7 @@ public class TransactionStored {
 	
 	/*
 	 * summary : keep track of the son of a transaction. The relationship is stored in the HashMap
-	 * 			 transactions_sons.
+	 * 			 transactionsSons.
 	 * param   : long parent - id of the parent transaction
 	 * 			 long son - id of the son transaction
 	 * return  : void. 
@@ -150,7 +150,7 @@ public class TransactionStored {
 	 */
 	private static void trackTransactionsSons(long parent, long son){
 				
-		transactions_sons.put(parent, son);
+		transactionsSons.put(parent, son);
 		
 	}
 }

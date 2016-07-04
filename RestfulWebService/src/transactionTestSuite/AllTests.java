@@ -1,4 +1,4 @@
-package transaction_test_suite;
+package transactionTestSuite;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;

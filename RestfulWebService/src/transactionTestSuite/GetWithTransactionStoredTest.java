@@ -1,4 +1,4 @@
-package transaction_test_suite;
+package transactionTestSuite;
 
 import static org.junit.Assert.*;
 
@@ -33,9 +33,9 @@ public class GetWithTransactionStoredTest {
 		
 		ClientResponse response = null;
 		
-		long transaction_id = 1;
+		long transactionId = 1;
 				
-		webResource = client.resource("http://localhost:8080/RestfulWebService/transactionservice/transaction/" + transaction_id );
+		webResource = client.resource("http://localhost:8080/RestfulWebService/transactionservice/transaction/" + transactionId );
 		
 		response = webResource.accept(MediaType.APPLICATION_JSON)
 								.type(MediaType.APPLICATION_JSON)
@@ -46,12 +46,12 @@ public class GetWithTransactionStoredTest {
 		}
 		
 		//check for the right informations
-		assertEquals("{\"amount\":10000,\"parent_id\":0,\"type\":\"car\"}" , response.getEntity(String.class));
+		assertEquals("{\"amount\":10000,\"parentId\":0,\"type\":\"car\"}" , response.getEntity(String.class));
 		
 		
-		transaction_id = 6;
+		transactionId = 6;
 		
-		webResource = client.resource("http://localhost:8080/RestfulWebService/transactionservice/transaction/" + transaction_id );
+		webResource = client.resource("http://localhost:8080/RestfulWebService/transactionservice/transaction/" + transactionId );
 		
 		response = webResource.accept(MediaType.APPLICATION_JSON)
 								.type(MediaType.APPLICATION_JSON)
@@ -62,7 +62,7 @@ public class GetWithTransactionStoredTest {
 		}
 		
 		//check for the right informations
-		assertEquals("{\"amount\":50000,\"parent_id\":5,\"type\":\"house\"}" , response.getEntity(String.class));
+		assertEquals("{\"amount\":50000,\"parentId\":5,\"type\":\"house\"}" , response.getEntity(String.class));
 		
 	}
 	
@@ -78,9 +78,9 @@ public class GetWithTransactionStoredTest {
 		
 		ClientResponse response = null;
 		
-		long transaction_id = 3;
+		long transactionId = 3;
 				
-		webResource = client.resource("http://localhost:8080/RestfulWebService/transactionservice/sum/" + transaction_id );
+		webResource = client.resource("http://localhost:8080/RestfulWebService/transactionservice/sum/" + transactionId );
 		
 		response = webResource.accept(MediaType.APPLICATION_JSON)
 								.type(MediaType.APPLICATION_JSON)
@@ -94,9 +94,9 @@ public class GetWithTransactionStoredTest {
 		assertEquals("{\"amount\":100}" , response.getEntity(String.class));
 		
 		
-		transaction_id = 5;
+		transactionId = 5;
 		
-		webResource = client.resource("http://localhost:8080/RestfulWebService/transactionservice/sum/" + transaction_id );
+		webResource = client.resource("http://localhost:8080/RestfulWebService/transactionservice/sum/" + transactionId );
 		
 		response = webResource.accept(MediaType.APPLICATION_JSON)
 								.type(MediaType.APPLICATION_JSON)
@@ -123,9 +123,9 @@ public class GetWithTransactionStoredTest {
 		
 		ClientResponse response = null;
 		
-		String transaction_id = "food";
+		String transactionId = "food";
 				
-		webResource = client.resource("http://localhost:8080/RestfulWebService/transactionservice/type/" + transaction_id );
+		webResource = client.resource("http://localhost:8080/RestfulWebService/transactionservice/type/" + transactionId );
 		
 		response = webResource.accept(MediaType.APPLICATION_JSON)
 								.type(MediaType.APPLICATION_JSON)
@@ -139,9 +139,9 @@ public class GetWithTransactionStoredTest {
 		assertEquals("[3,4]" , response.getEntity(String.class));
 		
 		
-		transaction_id = "house";
+		transactionId = "house";
 		
-		webResource = client.resource("http://localhost:8080/RestfulWebService/transactionservice/type/" + transaction_id );
+		webResource = client.resource("http://localhost:8080/RestfulWebService/transactionservice/type/" + transactionId );
 		
 		response = webResource.accept(MediaType.APPLICATION_JSON)
 								.type(MediaType.APPLICATION_JSON)

@@ -18,29 +18,29 @@ public class Sum {
 
 		/*
 		 * summary : Handle "get Sum" request.
-		 * parm	   : long transaction_id - id of the requested transaction.
+		 * parm	   : long transactionId - id of the requested transaction.
 		 * return  : Json string - the requested informations {"amount" : long} or an error message. 
 		 */
-		@Path("{transaction_id}")
+		@Path("{transactionId}")
 		@GET
 		@Produces ("application/json")
-		public Response getSum(@PathParam("transaction_id") long transaction_id){
+		public Response getSum(@PathParam("transactionId") long transactionId){
 						
 			double sum = 0;
 			
-			JSONObject json_sum = new JSONObject();
+			JSONObject jsonSum = new JSONObject();
 			
 			//call for the method that calculate the sum
-			sum = TransactionStored.getSum(transaction_id);
+			sum = TransactionStored.getSum(transactionId);
 			
 			//check if the sum is different from -1. If the sum is -1 this means that the transactions doesn't exists
 			if(sum != -1)
-				json_sum.put("amount", sum);
+				jsonSum.put("amount", sum);
 			else 
-				json_sum.put("Transaction not found", "It was impossible to find the specified transaction");
+				jsonSum.put("Transaction not found", "It was impossible to find the specified transaction");
 			
 						
-			return Response.status(200).entity(json_sum.toString()).build();
+			return Response.status(200).entity(jsonSum.toString()).build();
 			
 		}
 }

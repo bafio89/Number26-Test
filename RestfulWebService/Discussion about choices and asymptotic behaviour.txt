@@ -8,7 +8,7 @@ With the informations available to me, I assumed:
    - a transaction can have at most one son. 
    - the transaction id is automatically generated and the client send it to the RESTful 
      webservice. For this reason the webservice don't check if a transaction id already exists.
-   - when a new transaction have the field "parent_id" null, this will be set to 0 in the
+   - when a new transaction have the field "parentId" null, this will be set to 0 in the
    	 new transaction object.
    	 
 ASYMPTOTIC BEHAVIOUR

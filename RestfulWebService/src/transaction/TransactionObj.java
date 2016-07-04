@@ -11,18 +11,18 @@ public class TransactionObj {
 	private long id;
 	private double amount;
 	private String type;
-	private long parent_id;
+	private long parentId;
 	
 	TransactionObj(){
 		
 	}
 	
-	TransactionObj(long new_id, double new_amount, String new_type, long new_parent_id){
+	TransactionObj(long newId, double newAmount, String newType, long newParentId){
 		
-		id        = new_id;
-		amount    = new_amount;
-		type      = new_type;
-		parent_id = new_parent_id;
+		id        = newId;
+		amount    = newAmount;
+		type      = newType;
+		parentId = newParentId;
 		
 	}
 	
@@ -39,6 +39,6 @@ public class TransactionObj {
 	}
 	
 	public long getParentId(){
-		return this.parent_id;
+		return this.parentId;
 	}
 }
