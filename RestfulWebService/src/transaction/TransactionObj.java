@@ -11,13 +11,13 @@ public class TransactionObj {
 	private long id;
 	private double amount;
 	private String type;
-	private Long parentId;
+	private long parentId;
 	
 	TransactionObj(){
 		
 	}
 	
-	TransactionObj(long newId, double newAmount, String newType, Long newParentId){
+	TransactionObj(long newId, double newAmount, String newType, long newParentId){
 		
 		id        = newId;
 		amount    = newAmount;

@@ -60,6 +60,8 @@ public class TransactionStored {
 		DbManager transactionDb = new DbManager();
 		
 		String values = "";
+		
+		Long parentId = null;
 
 		if(transactionsStored.size() > MAX_SIZE_TRANSACTION){
 			
@@ -93,25 +95,27 @@ public class TransactionStored {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+				
 		if(newTransaction.getParentId() > 0 ){
+			
+			parentId = newTransaction.getParentId();
 			
 			if(transactionsSons.size() > MAX_SIZE_TYPE){
 				
 				transactionsSons.remove(trackingTransactionsSonsTemporality.poll());
 			}
 			
-			trackTransactionsSons(newTransaction.getParentId() , newTransaction.getId());
+			trackTransactionsSons(parentId , newTransaction.getId());
 			
 			try {
-				trackingTransactionsSonsTemporality.put(newTransaction.getParentId());
+				trackingTransactionsSonsTemporality.put(parentId);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
 		
-		values += "(" + newTransaction.getId() + ", \"" + newTransaction.getType() + "\" ," + newTransaction.getAmount() + "," + newTransaction.getParentId() + ")";
+		values += "(" + newTransaction.getId() + ", \"" + newTransaction.getType() + "\" ," + newTransaction.getAmount() + "," + parentId + ")";
 		
 		transactionDb.insert(TRANSACTION_TABLE, "", values);
 		

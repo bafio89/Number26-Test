@@ -68,8 +68,8 @@ public class Transaction {
 	@Produces ("application/json")
 	public Response putTransaction(@PathParam("transactionId") long transactionId, String jsonTransactionString){
 		
-//RIVEDI   default value is null. If parentId in the new transaction is null, parentId in the new object transaction will be set to 0 
-		Long parentId = null;
+		//default value is null. If parentId in the new transaction is null, parentId in the new object transaction will be set to 0 
+		long parentId = 0;
 		
 		JSONObject resultJson = new JSONObject();
 		
