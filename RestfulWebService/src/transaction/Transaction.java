@@ -68,8 +68,8 @@ public class Transaction {
 	@Produces ("application/json")
 	public Response putTransaction(@PathParam("transactionId") long transactionId, String jsonTransactionString){
 		
-		//default value is 0. If parentId in the new transaction is null, parentId in the new object transaction will be set to 0 
-		long parentId = 0;
+//RIVEDI   default value is null. If parentId in the new transaction is null, parentId in the new object transaction will be set to 0 
+		Long parentId = null;
 		
 		JSONObject resultJson = new JSONObject();
 		
@@ -85,12 +85,13 @@ public class Transaction {
 				
 				//check if the field parentId exist. This line is included in the try{} block because 
 				// the field parentId even if exist could be of a wrong type or value. 
-				if(jsonTransaction.has("parentId")) 
-						if(jsonTransaction.getLong("parentId") >= 0)
+				if(jsonTransaction.has("parentId")){ 
+						if(jsonTransaction.getLong("parentId") >= 0){
 							parentId = jsonTransaction.getLong("parentId");
-						else
+						}else{
 							throw new JSONException("");
-			
+						}
+				}
 				//create a new transaction object with the informations of the new transaction. 
 				newTransaction = new TransactionObj( transactionId , jsonTransaction.getDouble("amount"), jsonTransaction.getString("type") , parentId);
 						

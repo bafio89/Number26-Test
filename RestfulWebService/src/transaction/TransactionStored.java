@@ -1,7 +1,13 @@
 package transaction;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.concurrent.LinkedBlockingQueue;
+
+import dbManager.DbManager;
 
 /*
  *  Author: Fabio Fiorella
@@ -12,6 +18,18 @@ import java.util.LinkedList;
  *      
  */
 public class TransactionStored {
+	
+	private static String TRANSACTION_TABLE = "transaction";
+	
+	private static int MAX_SIZE_TRANSACTION = 100;
+	
+	private static int MAX_SIZE_TYPE = 20;
+	
+	private static LinkedBlockingQueue<Long> trackingTransactionsTemporality = new LinkedBlockingQueue<Long>();
+	
+	private static LinkedBlockingQueue<String> trackingTypeTransactionsTemporality = new LinkedBlockingQueue<String>();
+	
+	private static LinkedBlockingQueue<Long> trackingTransactionsSonsTemporality = new LinkedBlockingQueue<Long>();
 	
 	// HashMap used to store all the transactions with their informations. The key is the id of the transaction
 	private static HashMap<Long, TransactionObj> transactionsStored = new HashMap<Long, TransactionObj>();
@@ -36,18 +54,67 @@ public class TransactionStored {
 	 * return  : boolean - indicating success or fail. 
 	 */
 	public static boolean insertNewTransaction(TransactionObj newTransaction){
-		
+	
 		boolean result = false;
+		
+		DbManager transactionDb = new DbManager();
+		
+		String values = "";
 
+		if(transactionsStored.size() > MAX_SIZE_TRANSACTION){
+			
+			transactionsStored.remove(trackingTransactionsTemporality.poll());
+						
+		}
+		
 		//insert the new transaction 		
 		transactionsStored.put(newTransaction.getId(), newTransaction);
-			
-		//after the insertion it keep track of the type calling trackTypes
-		result = trackTypes(newTransaction.getType(), newTransaction.getId());		
 		
-		if(newTransaction.getParentId() > 0)
-			trackTransactionsSons(newTransaction.getParentId() , newTransaction.getId());
+		try {
+			trackingTransactionsTemporality.put(newTransaction.getId());
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+		if(transactionsByType.size() < MAX_SIZE_TYPE){
+			
+			transactionsByType.remove(trackingTypeTransactionsTemporality.poll());
 						
+		}
+		
+		//after the insertion it keep track of the type calling trackTypes
+		result = trackTypes(newTransaction.getType(), newTransaction.getId());
+		
+		try {
+			trackingTypeTransactionsTemporality.put(newTransaction.getType());
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		if(newTransaction.getParentId() > 0 ){
+			
+			if(transactionsSons.size() > MAX_SIZE_TYPE){
+				
+				transactionsSons.remove(trackingTransactionsSonsTemporality.poll());
+			}
+			
+			trackTransactionsSons(newTransaction.getParentId() , newTransaction.getId());
+			
+			try {
+				trackingTransactionsSonsTemporality.put(newTransaction.getParentId());
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		values += "(" + newTransaction.getId() + ", \"" + newTransaction.getType() + "\" ," + newTransaction.getAmount() + "," + newTransaction.getParentId() + ")";
+		
+		transactionDb.insert(TRANSACTION_TABLE, "", values);
+		
 		return result;
 	}
 	
@@ -58,7 +125,47 @@ public class TransactionStored {
 	 */
 	public static TransactionObj getTransaction(long id){
 		
-		return transactionsStored.get(id);
+		TransactionObj transaction = null;
+		
+		DbManager transactionDb = new DbManager();
+		
+		ResultSet rs = null;
+		
+		ArrayList<String> whereClause = new ArrayList<String>();
+		
+		whereClause.add("id = " + id);
+		
+		if(transactionsStored.containsKey(id)){
+			transaction = transactionsStored.get(id);
+		}else{
+			rs = transactionDb.select(TRANSACTION_TABLE, "*", whereClause);
+			
+			if(rs != null){
+				try {					
+					rs.next();					
+					
+					transaction = new TransactionObj(rs.getLong("id"), rs.getDouble("amount"), rs.getString("type"), rs.getLong("parent_id"));
+					
+					if(transactionsStored.size() > MAX_SIZE_TRANSACTION){
+						
+						transactionsStored.remove(trackingTransactionsTemporality.poll());
+					}	
+						
+					transactionsStored.put(id, transaction);
+					
+					trackingTransactionsTemporality.put(id);
+					
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+				
+		return transaction;
 	}
 	
 	
@@ -70,7 +177,49 @@ public class TransactionStored {
 	 */
 	public static LinkedList<Long> getTypes(String type){
 		
-		return transactionsByType.get(type);
+		LinkedList<Long> transactionsIdListByType = new LinkedList<Long>();
+		
+		DbManager transactionDb = new DbManager();
+		
+		ResultSet rs = null;
+		
+		ArrayList<String> whereClause = new ArrayList<String>();
+		whereClause.add("type = '" + type + "'");
+		
+		if(transactionsByType.containsKey(type)){
+			transactionsIdListByType = transactionsByType.get(type);
+		}else{
+			rs  = transactionDb.select(TRANSACTION_TABLE, "id", whereClause);
+			
+			try {
+				while(rs.next()){
+					transactionsIdListByType.add(rs.getLong("id"));
+				}
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			if(transactionsIdListByType != null){
+				
+				if(transactionsByType.size() > MAX_SIZE_TYPE){
+				
+					transactionsByType.remove(trackingTypeTransactionsTemporality.poll());
+				
+				}
+			
+				transactionsByType.put(type, transactionsIdListByType);
+			
+				try {
+					trackingTypeTransactionsTemporality.put(type);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+
+		return transactionsIdListByType;
 		
 	}
 	
@@ -85,9 +234,62 @@ public class TransactionStored {
 		
 		// The variable sum is the returned value. Is initialized to -1. If this value is returned,
 		// it was impossible to find the transaction with the specified id.
-		double sum = -1;
+		double sum = 0;
 		
-		TransactionObj transactionParent = transactionsStored.get(id);
+		boolean end = false;
+		
+		long parent_id = -1;
+		
+		TransactionObj transactionParent = null;
+		
+		DbManager transactionDb = new DbManager();
+		
+		ResultSet rs = null;
+		
+		ArrayList<String> whereClause = new ArrayList<String>();
+		
+		whereClause.add("id = " + id);
+		
+		while(!end){
+		
+			transactionParent = transactionsStored.get(id);
+		
+			if(transactionParent == null){
+			
+				rs = transactionDb.select(TRANSACTION_TABLE, "*", whereClause);
+			
+				if(rs != null){
+				
+					try {
+						rs.next();
+									
+						sum += rs.getDouble("amount");
+						
+						id = rs.getLong("id");
+						
+						parent_id = rs.getLong("parent_id");
+						
+						if(transactionsSons.size() > MAX_SIZE_TRANSACTION){
+						
+							transactionsSons.remove(trackingTransactionsSonsTemporality.poll());
+							
+							trackTransactionsSons(id, parent_id);
+							
+						}
+						
+					} catch (SQLException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}else{
+					end = true;
+				}
+				
+				id = parent_id;
+						
+			}
+		
+		}
 		
 		//check if the request transaction really exist 
 		if(transactionParent != null){
@@ -132,9 +334,10 @@ public class TransactionStored {
 		//add the id of the new transaction to the list of all transactions of the specified type. 
 		result = transactionsIdBySingleType.add(id);
 		
-		if(result)
+		if(result){
 			//insert the couple key-value in the HashMap. If the key already exist, it will be update. 
 			transactionsByType.put(type, transactionsIdBySingleType);
+		}
 				 
 		return result;
 					
